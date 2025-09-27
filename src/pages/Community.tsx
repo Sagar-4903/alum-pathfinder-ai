@@ -39,7 +39,8 @@ const Community: React.FC = () => {
       isPrivate: false,
       lastActivity: '2 hours ago',
       unreadCount: 8,
-      isOnline: true
+      isOnline: true,
+      lastMessage: 'Alex: Just saw the news about our college getting ranked #1! 🎉'
     },
     {
       id: '2', 
@@ -50,7 +51,8 @@ const Community: React.FC = () => {
       isPrivate: false,
       lastActivity: '1 hour ago',
       unreadCount: 23,
-      isOnline: true
+      isOnline: true,
+      lastMessage: 'John: Just posted a new SDE opening at Amazon. DM me!'
     },
     {
       id: '3',
@@ -61,7 +63,8 @@ const Community: React.FC = () => {
       isPrivate: false,
       lastActivity: '30 min ago',
       unreadCount: 5,
-      isOnline: true
+      isOnline: true,
+      lastMessage: 'Maria: Weekend meetup at Golden Gate Park?'
     },
     {
       id: '4',
@@ -72,7 +75,44 @@ const Community: React.FC = () => {
       isPrivate: true,
       lastActivity: '4 hours ago',
       unreadCount: 0,
-      isOnline: false
+      isOnline: false,
+      lastMessage: 'David: Secured Series A funding! Thanks for the advice'
+    },
+    {
+      id: '8',
+      name: 'Class of 2020 - Business',
+      description: 'MBA graduates networking group',
+      members: 89,
+      avatar: '📈',
+      isPrivate: false,
+      lastActivity: '1 day ago',
+      unreadCount: 12,
+      isOnline: true,
+      lastMessage: 'Rachel: Anyone interested in a finance career panel?'
+    },
+    {
+      id: '9',
+      name: 'Women in Tech Alumni',
+      description: 'Supporting women alumni in technology careers',
+      members: 156,
+      avatar: '👩‍💻',
+      isPrivate: false,
+      lastActivity: '3 hours ago',
+      unreadCount: 18,
+      isOnline: true,
+      lastMessage: 'Jennifer: Mentorship program applications are now open!'
+    },
+    {
+      id: '10',
+      name: 'International Alumni',
+      description: 'Global network of international graduates',
+      members: 423,
+      avatar: '🌍',
+      isPrivate: false,
+      lastActivity: '5 hours ago',
+      unreadCount: 7,
+      isOnline: true,
+      lastMessage: 'Kumar: Virtual reunion planning meeting tomorrow'
     }
   ];
 
@@ -86,7 +126,8 @@ const Community: React.FC = () => {
       lastMessage: 'Hey Sarah! Are you free for a coffee this weekend?',
       timestamp: '10 min ago',
       unreadCount: 2,
-      isOnline: true
+      isOnline: true,
+      isTyping: false
     },
     {
       id: '6', 
@@ -96,7 +137,8 @@ const Community: React.FC = () => {
       lastMessage: 'Thanks for the referral! Got the interview 🎉',
       timestamp: '1 hour ago',
       unreadCount: 0,
-      isOnline: true
+      isOnline: true,
+      isTyping: true
     },
     {
       id: '7',
@@ -106,7 +148,69 @@ const Community: React.FC = () => {
       lastMessage: 'The mentorship session was really helpful',
       timestamp: '2 days ago',
       unreadCount: 1,
-      isOnline: false
+      isOnline: false,
+      isTyping: false
+    },
+    {
+      id: '11',
+      name: 'Dr. Jennifer Kim',
+      role: 'Professor at Stanford',
+      avatar: '',
+      lastMessage: 'Would love to discuss the research collaboration',
+      timestamp: '3 hours ago',
+      unreadCount: 3,
+      isOnline: true,
+      isTyping: false
+    },
+    {
+      id: '12',
+      name: 'Robert Chen',
+      role: 'Startup Founder',
+      avatar: '',
+      lastMessage: 'The investor meeting went great! 🚀',
+      timestamp: '1 day ago',
+      unreadCount: 0,
+      isOnline: false,
+      isTyping: false
+    },
+    {
+      id: '13',
+      name: 'Lisa Park',
+      role: 'UX Designer at Apple',
+      avatar: '',
+      lastMessage: 'Thanks for the design feedback!',
+      timestamp: '2 days ago',
+      unreadCount: 0,
+      isOnline: true,
+      isTyping: false
+    }
+  ];
+
+  // Mock pending messages
+  const pendingMessages = [
+    {
+      id: 'p1',
+      from: 'Career Services',
+      subject: 'New Job Opportunities Available',
+      preview: '5 new positions at top tech companies...',
+      timestamp: '1 hour ago',
+      type: 'system'
+    },
+    {
+      id: 'p2', 
+      from: 'Alumni Association',
+      subject: 'Reunion 2024 Planning Committee',
+      preview: 'Join us in organizing the biggest reunion yet...',
+      timestamp: '3 hours ago',
+      type: 'official'
+    },
+    {
+      id: 'p3',
+      from: 'Mentorship Program',
+      subject: 'New Mentee Match Available',
+      preview: 'A Computer Science student is looking for guidance...',
+      timestamp: '1 day ago',
+      type: 'mentorship'
     }
   ];
 
@@ -349,9 +453,14 @@ const Community: React.FC = () => {
                             {dm.role}
                           </p>
                           <div className="flex items-center justify-between">
-                            <p className="text-xs text-muted-foreground truncate flex-1 mr-2">
-                              {dm.lastMessage}
-                            </p>
+                            <div className="flex-1 mr-2">
+                              <p className="text-xs text-foreground/80 truncate font-medium">
+                                {dm.lastMessage}
+                              </p>
+                              {dm.isTyping && (
+                                <p className="text-xs text-primary italic">typing...</p>
+                              )}
+                            </div>
                             <span className="text-xs text-muted-foreground">
                               {dm.timestamp}
                             </span>
@@ -481,58 +590,129 @@ const Community: React.FC = () => {
           </div>
         </div>
 
-        {/* Pending Invitations */}
-        <Card className="widget-container mt-6">
-          <CardHeader className="widget-header">
-            <CardTitle className="flex items-center">
-              <Bell className="h-5 w-5 mr-2 text-primary" />
-              Pending Group Invitations
-            </CardTitle>
-            <CardDescription>
-              Groups you've been invited to join
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="widget-content">
-            <div className="grid md:grid-cols-2 gap-4">
-              {[
-                {
-                  name: 'Data Science Alumni',
-                  description: 'Connect with fellow data science graduates',
-                  members: 156,
-                  avatar: '📊',
-                  invitedBy: 'Dr. Smith'
-                },
-                {
-                  name: 'International Alumni Network', 
-                  description: 'Global network of international graduates',
-                  members: 423,
-                  avatar: '🌍',
-                  invitedBy: 'Maria Rodriguez'
-                }
-              ].map((invitation, index) => (
-                <div key={index} className="data-point">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white text-xl">
-                      {invitation.avatar}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-sm mb-1">{invitation.name}</h4>
-                      <p className="text-xs text-muted-foreground mb-2">{invitation.description}</p>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        Invited by {invitation.invitedBy} • {invitation.members} members
-                      </p>
-                      <div className="flex space-x-2">
-                        <Button size="sm" className="corporate-button">
-                          Accept
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          Decline
-                        </Button>
+        {/* Additional Community Sections */}
+        <div className="grid lg:grid-cols-2 gap-6 mt-6">
+          
+          {/* Pending Messages */}
+          <Card className="widget-container">
+            <CardHeader className="widget-header">
+              <CardTitle className="flex items-center">
+                <MessageSquare className="h-5 w-5 mr-2 text-primary" />
+                Pending Messages
+              </CardTitle>
+              <CardDescription>
+                Important messages waiting for your attention
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="widget-content">
+              <div className="space-y-3">
+                {pendingMessages.map((message) => (
+                  <div key={message.id} className="data-point">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white">
+                        {message.type === 'system' ? '🔔' : message.type === 'official' ? '🏛️' : '🤝'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className="font-medium text-sm truncate">{message.from}</h4>
+                          <span className="text-xs text-muted-foreground">{message.timestamp}</span>
+                        </div>
+                        <p className="text-sm font-medium mb-1 truncate">{message.subject}</p>
+                        <p className="text-xs text-muted-foreground truncate">{message.preview}</p>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Pending Group Invitations */}
+          <Card className="widget-container">
+            <CardHeader className="widget-header">
+              <CardTitle className="flex items-center">
+                <Bell className="h-5 w-5 mr-2 text-primary" />
+                Group Invitations
+              </CardTitle>
+              <CardDescription>
+                Groups you've been invited to join
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="widget-content">
+              <div className="space-y-4">
+                {[
+                  {
+                    name: 'Data Science Alumni',
+                    description: 'Connect with fellow data science graduates',
+                    members: 156,
+                    avatar: '📊',
+                    invitedBy: 'Dr. Smith'
+                  },
+                  {
+                    name: 'Research Alumni Network', 
+                    description: 'Academic and industry researchers',
+                    members: 89,
+                    avatar: '🔬',
+                    invitedBy: 'Prof. Johnson'
+                  }
+                ].map((invitation, index) => (
+                  <div key={index} className="data-point">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white text-lg">
+                        {invitation.avatar}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-sm mb-1">{invitation.name}</h4>
+                        <p className="text-xs text-muted-foreground mb-2">{invitation.description}</p>
+                        <p className="text-xs text-muted-foreground mb-3">
+                          Invited by {invitation.invitedBy} • {invitation.members} members
+                        </p>
+                        <div className="flex space-x-2">
+                          <Button size="sm" className="corporate-button">
+                            Accept
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            Decline
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Community Stats */}
+        <Card className="widget-container mt-6">
+          <CardHeader className="widget-header">
+            <CardTitle className="flex items-center">
+              <Users className="h-5 w-5 mr-2 text-primary" />
+              Community Activity
+            </CardTitle>
+            <CardDescription>
+              Recent activity across all alumni groups
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="widget-content">
+            <div className="grid md:grid-cols-4 gap-4">
+              <div className="data-point text-center">
+                <div className="text-2xl font-bold text-primary">1,247</div>
+                <div className="text-sm text-muted-foreground">Active Members</div>
+              </div>
+              <div className="data-point text-center">
+                <div className="text-2xl font-bold text-primary">89</div>
+                <div className="text-sm text-muted-foreground">Messages Today</div>
+              </div>
+              <div className="data-point text-center">
+                <div className="text-2xl font-bold text-primary">12</div>
+                <div className="text-sm text-muted-foreground">Active Groups</div>
+              </div>
+              <div className="data-point text-center">
+                <div className="text-2xl font-bold text-primary">156</div>
+                <div className="text-sm text-muted-foreground">New Connections</div>
+              </div>
             </div>
           </CardContent>
         </Card>
